@@ -80,3 +80,10 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=6281234567890
 npm run dev
 
 打开浏览器访问 http://localhost:3000 即可查看效果。☁️ Cloudflare 部署指南 (Deployment)本项目针对 Cloudflare Pages 进行了深度优化，可实现低成本、极速部署：将代码推送到你的 GitHub 仓库。登录 Cloudflare Dashboard $\rightarrow$ Workers & Pages $\rightarrow$ Create Application $\rightarrow$ Pages $\rightarrow$ Connect to Git。选择 nusantara-villa 仓库，构建设置如下：Framework preset: Next.jsBuild command: npx @cloudflare/next-on-pagesBuild output directory: .vercel/output/static在 Cloudflare Pages 后台环境变量（Environment Variables）中添加你的 Telegram Bot Token 和 WhatsApp 接收号码。点击 Save and Deploy，即可完成全球 CDN 部署。🗺️ 产品迭代路线图 (Roadmap)[x] Phase 1: MVP 验证 — WebGL 3D 模型渲染 + 基础参数造价计算器 + Cloudflare Pages 部署。[ ] Phase 2: 交互与线索拦截 — 支持多区域材质实时替换、动态 PDF 方案书生成、Telegram/WhatsApp 秒级线索推送。[ ] Phase 3: 印尼本土化 — 支持英语/印尼语/中文多语言切换、集成印尼建筑合规许可（PBG/SLF）咨询模块。[ ] Phase 4: 数字化交付看板 — 增加 "Live Construction Monitor"（远程施工进度与日志看板），打造“线上选配 ➔ 合同签订 ➔ 远程监工 ➔ 整装交付”的全流程闭环。📄 开源协议 (License)本项目采用 MIT License 开源协议。
+
+
+🔗 姐妹项目
+项目	定位	关系
+IndoScout-D-B	B端获客引擎	主动挖掘客户 → 销售跟进
+Nusantara-Villa（本项目）	C端转化平台	3D 体验 → 实时报价 → 意向转化
+
