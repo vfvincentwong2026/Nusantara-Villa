@@ -1,10 +1,5 @@
 // ============================================================
 // Nusantara Villa - 线索提交 API (Cloudflare Workers Edge)
-// 技术规范：
-//   1. export const runtime = 'edge'
-//   2. 使用原生 fetch 调用 Telegram Bot API
-//   3. 禁止 Node.js 独有依赖 (fs, http, etc.)
-//   4. 毫秒级执行，适合 Cloudflare Edge 节点
 // ============================================================
 
 export const runtime = 'edge'
@@ -25,7 +20,6 @@ interface LeadRequest {
   totalPrice: number
   currency: string
   message?: string
-  source?: string // 'website' | 'whatsapp' | 'referral'
 }
 
 interface LeadResponse {
@@ -41,8 +35,8 @@ interface LeadResponse {
 
 function generateLeadId(): string {
   const timestamp = Date.now().toString(36)
-  const random = Math.random().toString(36).substring(2, 8)
-  return `lead_${timestamp}_${random}`
+  const random = Math.random().toString(36).substring(2, 6)
+  return `NV-${timestamp}-${random}`.toUpperCase()
 }
 
 function formatCurrency(amount: number, currency: string): string {
@@ -52,35 +46,54 @@ function formatCurrency(amount: number, currency: string): string {
   return `$${amount.toLocaleString()}`
 }
 
+/**
+ * Telegram Markdown V2 安全转义
+ * 只转义普通文本中的特殊字符，保留已使用的 Markdown 语法结构
+ */
 function escapeMarkdown(text: string): string {
-  // Telegram Markdown V2 转义
-  const specialChars = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']
-  let result = text
-  for (const char of specialChars) {
-    result = result.replaceAll(char, `\\${char}`)
+  if (!text) return ''
+  // 逐字符处理，只转义需要转义的字符
+  // 注意：不转义空格、换行、以及 Markdown 语法中用于格式化的符号
+  const chars = text.split('')
+  let result = ''
+  for (const char of chars) {
+    // 需要转义的特殊字符列表（Markdown V2）
+    if ('_*[]()~`>#+-=|{}.!'.includes(char)) {
+      result += `\\${char}`
+    } else {
+      result += char
+    }
   }
   return result
 }
 
+/**
+ * 标准化手机号（用于 wa.me 链接）
+ * 保留 + 号，移除空格和特殊符号
+ */
+function normalizePhone(phone: string): string {
+  // 保留 + 和数字，移除其他字符
+  return phone.replace(/[^0-9+]/g, '')
+}
+
 // ============================================================
-// 主处理函数
+// POST: 提交线索
 // ============================================================
 
 export async function POST(request: Request): Promise<Response> {
   const startTime = performance.now()
 
   try {
-    // 1. 解析请求体
     const body: LeadRequest = await request.json()
+    const { name, email, phone, style, size, tier, totalPrice, currency, message, addons } = body
 
-    // 2. 基础验证
-    const { name, email, phone, style, size, tier, totalPrice, currency } = body
-
+    // ----- 验证 -----
     if (!name || !email || !phone) {
       return new Response(
         JSON.stringify({
           success: false,
-          message: '请填写完整信息 (姓名、邮箱、电话)',
+          leadId: '',
+          message: 'Please complete all required fields (Name, Email, Phone).',
         } as LeadResponse),
         {
           status: 400,
@@ -89,123 +102,113 @@ export async function POST(request: Request): Promise<Response> {
       )
     }
 
-    // 3. 生成 Lead ID
+    // ----- 生成 Lead ID -----
     const leadId = generateLeadId()
     const timestamp = new Date().toISOString()
+    const addonsList = addons && addons.length > 0 ? addons.join(', ') : 'None'
 
-    // 4. 构建 Telegram 消息 (符合规范：Markdown V2)
-    const addonsList = body.addons && body.addons.length > 0
-      ? body.addons.join(', ')
-      : '无'
+    // ----- 构建 Telegram 消息 -----
+    const telegramMessage = `
+🏛️ *Nusantara Villa - New Lead Captured*
 
-    const message = `
-🏡 *新意向线索*
+👤 *Client Name:* ${escapeMarkdown(name)}
+📱 *Phone:* ${escapeMarkdown(phone)}
+📧 *Email:* ${escapeMarkdown(email)}
 
-👤 *姓名:* ${escapeMarkdown(name)}
-📱 *电话:* ${escapeMarkdown(phone)}
-📧 *邮箱:* ${escapeMarkdown(email)}
+🏗️ *Config details:*
+• Style: ${escapeMarkdown(style)}
+• Size: ${escapeMarkdown(size.toString())} m²
+• Tier: ${escapeMarkdown(tier)}
+• Addons: ${escapeMarkdown(addonsList)}
 
-🏗️ *项目配置:*
-• 风格: ${escapeMarkdown(style)}
-• 面积: ${escapeMarkdown(size.toString())} m²
-• 档次: ${escapeMarkdown(tier)}
-• 增值模块: ${escapeMarkdown(addonsList)}
+💰 *Est. Investment:* ${escapeMarkdown(formatCurrency(totalPrice, currency))}
+📋 *Notes:* ${message ? escapeMarkdown(message) : 'None'}
 
-💰 *预算:* ${escapeMarkdown(formatCurrency(totalPrice, currency))}
-
-📋 *备注:* ${body.message ? escapeMarkdown(body.message) : '无'}
-
-🕐 *提交时间:* ${escapeMarkdown(timestamp)}
-
-🔗 *Lead ID:* ${escapeMarkdown(leadId)}
+🕐 *Time:* ${escapeMarkdown(timestamp)}
+🆔 *Lead ID:* \`${escapeMarkdown(leadId)}\`
     `.trim()
 
-    // 5. 调用 Telegram Bot API (Edge 原生 fetch)
+    // ----- 调用 Telegram Bot API -----
     const botToken = process.env.TELEGRAM_BOT_TOKEN
     const chatId = process.env.TELEGRAM_CHAT_ID
-
     let telegramSuccess = false
-    let telegramError = ''
+
+    // 标准化客户手机号（用于销售快捷联系）
+    const clientCleanPhone = normalizePhone(phone)
+    const clientWaUrl = `https://wa.me/${clientCleanPhone}`
 
     if (botToken && chatId) {
       try {
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`
         const telegramResponse = await fetch(telegramUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
-            text: message,
+            text: telegramMessage,
             parse_mode: 'MarkdownV2',
             disable_web_page_preview: true,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: '💬 Reply via WhatsApp',
+                    url: clientWaUrl,
+                  },
+                ],
+              ],
+            },
           }),
         })
 
-        if (telegramResponse.ok) {
-          telegramSuccess = true
-        } else {
-          const errorText = await telegramResponse.text()
-          telegramError = errorText
-        }
+        if (telegramResponse.ok) telegramSuccess = true
       } catch (err) {
-        telegramError = err instanceof Error ? err.message : 'Unknown error'
+        console.error('[Telegram API Exception]', err)
       }
-    } else {
-      telegramError = 'Telegram Bot 未配置 (缺少 TELEGRAM_BOT_TOKEN 或 TELEGRAM_CHAT_ID)'
     }
 
-    // 6. 构建 WhatsApp 链接 (印尼本地化: 前缀 +62)
-    const cleanPhone = phone.replace(/[^0-9+]/g, '')
-    const waNumber = cleanPhone.startsWith('+') ? cleanPhone.substring(1) : cleanPhone
-    const waMessage = `Halo%2C%20saya%20tertarik%20dengan%20proyek%20villa%20${encodeURIComponent(style)}%20(${size}m²)%20-%20Lead%20ID%3A%20${leadId}`
-    const whatsappLink = `https://wa.me/${waNumber}?text=${waMessage}`
+    // ----- 构建官方 WhatsApp 链接（客户 → 官方）-----
+    const officialWaNumber = process.env.OFFICIAL_WHATSAPP_NUMBER || '6281234567890'
+    const waText = `Halo Nusantara Villa Team, I have saved my configurator quote (Lead ID: ${leadId}) for a ${style} Villa (${size}m²). I would like to receive the detailed BOQ.`
+    const whatsappLink = `https://wa.me/${normalizePhone(officialWaNumber)}?text=${encodeURIComponent(waText)}`
 
-    // 7. 计算响应时间 (Edge 性能监控)
+    // ----- 日志记录 -----
     const elapsedMs = Math.round(performance.now() - startTime)
+    console.log(`[Lead API] leadId=${leadId} | telegram=${telegramSuccess} | time=${elapsedMs}ms`)
 
-    // 8. 返回响应
-    const response: LeadResponse = {
-      success: telegramSuccess,
-      leadId,
-      message: telegramSuccess
-        ? '线索已提交，我们的团队将在 24 小时内联系您'
-        : '线索已记录，但通知服务暂时不可用。我们的团队将尽快联系您',
-      whatsappLink,
-    }
-
-    // 日志记录 (Edge 环境通过 console 输出，可在 Cloudflare Dashboard 查看)
-    console.log(`[Lead API] leadId=${leadId} | telegram=${telegramSuccess ? 'ok' : 'fail'} | elapsed=${elapsedMs}ms`)
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-      },
-    })
+    // ----- 返回响应 -----
+    return new Response(
+      JSON.stringify({
+        success: true,
+        leadId,
+        message: telegramSuccess
+          ? 'Lead recorded successfully. Our team will contact you within 24 hours.'
+          : 'Lead recorded, but notification service is temporarily unavailable. Our team will contact you soon.',
+        whatsappLink,
+      } as LeadResponse),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store',
+        },
+      }
+    )
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-
-    console.error(`[Lead API Error] ${errorMessage}`)
-
+    console.error('[Lead API Error]', error)
     return new Response(
       JSON.stringify({
         success: false,
         leadId: '',
-        message: '服务器处理请求时发生错误，请稍后重试',
+        message: 'Internal server error. Please try again later.',
       } as LeadResponse),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
 }
 
 // ============================================================
-// 健康检查 (GET)
+// GET: 健康检查
 // ============================================================
 
 export async function GET(): Promise<Response> {
@@ -216,9 +219,6 @@ export async function GET(): Promise<Response> {
       service: 'Nusantara Villa Lead API',
       timestamp: new Date().toISOString(),
     }),
-    {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    }
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
   )
 }
