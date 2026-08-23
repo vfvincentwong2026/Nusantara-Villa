@@ -1,26 +1,26 @@
 // ============================================================
-// Nusantara Villa - 配置状态管理与算价引擎
+// Nusantara Villa - 配置状态管理与算价引擎 (Zustand Store)
 // 技术规范：
 //   1. 细粒度 Selector，避免 3D Canvas 不必要重绘
 //   2. 包含免责声明 (Baseline Estimate; Final BOQ Subject to Site Visit)
 //   3. 支持 USD / IDR 动态切换
-//   4. 纯客户端 Zustand Store (配合 next/dynamic 使用)
+//   4. 纯客户端 Zustand Store (完美兼容 SSR Hydration)
 // ============================================================
 
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 // ============================================================
 // 1. 类型定义
 // ============================================================
 
-export type VillaStyle = 'modern_tropical' | 'wabi_sabi' | 'mediterranean'
+export type VillaStyle = 'modern_tropical' | 'wabi_sadi' | 'mediterranean'
 export type AreaSize = 150 | 200 | 300
 export type TierLevel = 'standard' | 'luxury' | 'ultra_luxury'
 export type AddonCode = 'pool' | 'rooftop' | 'spa' | 'smart_home'
 export type Currency = 'USD' | 'IDR'
 
-/** 免责声明（固定文案，符合规范要求） */
+/** 免责声明（符合规范要求） */
 export const DISCLAIMER =
   'Baseline Estimate; Final BOQ Subject to Site Visit & Soil Survey'
 
@@ -71,75 +71,7 @@ export type ConfigStep =
   | 'complete'
 
 // ============================================================
-// 2. Store 状态接口
-// ============================================================
-
-interface ConfiguratorState {
-  // ----- 用户配置 -----
-  style: VillaStyle | null
-  size: AreaSize | null
-  tier: TierLevel | null
-  addons: AddonCode[]
-
-  // ----- 用户信息 -----
-  userInfo: UserInfo | null
-
-  // ----- 计算结果 -----
-  quote: QuoteResult | null
-  roi: ROIResult | null
-
-  // ----- UI 状态 -----
-  currentStep: ConfigStep
-  isSubmitting: boolean
-  isComplete: boolean
-  currency: Currency
-
-  // ----- 免责声明（固定值）-----
-  disclaimer: string
-
-  // ----- 错误状态 -----
-  errors: Record<string, string>
-
-  // ----- Actions -----
-  setStyle: (style: VillaStyle) => void
-  setSize: (size: AreaSize) => void
-  setTier: (tier: TierLevel) => void
-  toggleAddon: (addon: AddonCode) => void
-  setUserInfo: (info: UserInfo) => void
-  setCurrency: (currency: Currency) => void
-
-  // ----- 导航 -----
-  goToStep: (step: ConfigStep) => void
-  nextStep: () => void
-  prevStep: () => void
-  reset: () => void
-
-  // ----- 计算引擎 -----
-  recalculateQuote: () => void
-
-  // ----- 提交控制 -----
-  setSubmitting: (loading: boolean) => void
-  complete: () => void
-  setError: (field: string, message: string) => void
-  clearErrors: () => void
-
-  // ----- 细粒度 Selector 辅助（计算属性）-----
-  get selectedStyleData: StylePreset | null
-  get selectedSizeData: SizeOption | null
-  get selectedTierData: TierOption | null
-  get selectedAddonsData: AddonOption[]
-  get canGoNext: boolean
-  get canGoPrev: boolean
-  get progress: number
-  get stepLabel: string
-  get stepDescription: string
-  get isConfigComplete: boolean
-  get displayPrice: string
-  get displayPriceIDR: string
-}
-
-// ============================================================
-// 3. 预设配置数据（价格基准）
+// 2. 预设配置数据（价格基准）
 // ============================================================
 
 export interface StylePreset {
@@ -187,7 +119,6 @@ export interface AddonOption {
   isPopular?: boolean
 }
 
-// ----- 预设数据 -----
 export const STYLE_PRESETS: StylePreset[] = [
   {
     id: 'modern_tropical',
@@ -325,7 +256,7 @@ export const ADDON_OPTIONS: AddonOption[] = [
 const USD_TO_IDR = 15000
 
 // ============================================================
-// 4. 算价引擎（纯函数，可测试）
+// 3. 算价与转换工具函数（纯函数）
 // ============================================================
 
 export interface PricingInput {
@@ -335,14 +266,25 @@ export interface PricingInput {
   addons: AddonCode[]
 }
 
-export function calculateQuote(input: PricingInput): Omit<QuoteResult, 'currency' | 'disclaimer'> {
+/**
+ * 货币转换（纯函数）
+ */
+export function convertPrice(amount: number, from: Currency, to: Currency): number {
+  if (from === to) return amount
+  if (from === 'USD' && to === 'IDR') return Math.round(amount * USD_TO_IDR)
+  if (from === 'IDR' && to === 'USD') return Math.round(amount / USD_TO_IDR)
+  return amount
+}
+
+/**
+ * 计算报价（始终以 USD 为基准货币）
+ */
+export function calculateQuote(input: PricingInput): QuoteResult {
   const { style, size, tier, addons } = input
 
-  // 获取系数
-  const sizeMultiplier = SIZE_OPTIONS.find(s => s.value === size)?.multiplier || 1.0
-  const tierMultiplier = TIER_OPTIONS.find(t => t.value === tier)?.multiplier || 1.0
+  const sizeMultiplier = SIZE_OPTIONS.find((s) => s.value === size)?.multiplier || 1.0
+  const tierMultiplier = TIER_OPTIONS.find((t) => t.value === tier)?.multiplier || 1.0
 
-  // 基础单价 (USD / m²) — 根据风格微调
   const baseRateMap: Record<VillaStyle, number> = {
     modern_tropical: 2200,
     wabi_sabi: 2400,
@@ -350,15 +292,20 @@ export function calculateQuote(input: PricingInput): Omit<QuoteResult, 'currency
   }
   const baseRate = baseRateMap[style] || 2200
 
-  // 基础价 = 单价 × 面积 × 面积系数 × 档次系数
   const basePrice = baseRate * size * sizeMultiplier * tierMultiplier
 
-  // 增值模块价格
+  // 动态计算 addons（从 ADDON_OPTIONS 驱动，避免硬编码）
   let addonsPrice = 0
   const addonsBreakdown: Record<AddonCode, number> = {} as Record<AddonCode, number>
 
-  addons.forEach(code => {
-    const addon = ADDON_OPTIONS.find(a => a.code === code)
+  // 初始化所有 addon 为 0（保证返回结构完整）
+  ADDON_OPTIONS.forEach((opt) => {
+    addonsBreakdown[opt.code] = 0
+  })
+
+  // 计算选中的 addon 价格
+  addons.forEach((code) => {
+    const addon = ADDON_OPTIONS.find((a) => a.code === code)
     if (addon) {
       let price = 0
       if (addon.pricePerSqm) {
@@ -371,48 +318,49 @@ export function calculateQuote(input: PricingInput): Omit<QuoteResult, 'currency
     }
   })
 
-  // 管理费（总价的 10%）
   const subtotal = basePrice + addonsPrice
   const managementFee = subtotal * 0.10
   const totalPrice = subtotal + managementFee
-
-  // 施工周期估算（月）
   const estimatedMonths = 8 + Math.ceil(size / 50)
-
-  // 各分项明细（用于展示）
-  const breakdown: QuoteBreakdown = {
-    structure: Math.round(basePrice * 0.35),
-    finishing: Math.round(basePrice * 0.30),
-    furniture: Math.round(basePrice * 0.20),
-    addons: addonsBreakdown,
-    management: Math.round(managementFee),
-  }
 
   return {
     basePrice: Math.round(basePrice),
     addonsPrice: Math.round(addonsPrice),
     managementFee: Math.round(managementFee),
     totalPrice: Math.round(totalPrice),
-    breakdown,
+    currency: 'USD', // 基础货币固定为 USD
+    disclaimer: DISCLAIMER,
     estimatedCompletionMonths: estimatedMonths,
+    breakdown: {
+      structure: Math.round(basePrice * 0.35),
+      finishing: Math.round(basePrice * 0.30),
+      furniture: Math.round(basePrice * 0.20),
+      addons: addonsBreakdown,
+      management: Math.round(managementFee),
+    },
   }
 }
 
-export function calculateROI(quote: QuoteResult, location: string = 'bali'): ROIResult {
-  // 简化 ROI 模型：基于总价 × 0.2 估算日租金
-  // 实际生产中可接入真实租金数据库
+/**
+ * 计算 ROI（基于 USD 报价）
+ */
+export function calculateROI(quoteUSD: QuoteResult): ROIResult {
+  // 确保传入的是 USD 报价
+  if (quoteUSD.currency !== 'USD') {
+    console.warn('[calculateROI] 预期 USD 报价，实际为', quoteUSD.currency)
+  }
+
   const occupancyRate = 0.75
   const managementFeeRate = 0.15
   const taxRate = 0.10
 
-  // 日租金估算：总价 × 0.18% (高端别墅市场经验值)
-  const dailyRate = quote.totalPrice * 0.0018
+  const dailyRate = quoteUSD.totalPrice * 0.0018
   const annualRevenue = dailyRate * 365 * occupancyRate
   const annualCost = annualRevenue * (managementFeeRate + taxRate)
   const netIncome = annualRevenue - annualCost
-  const grossYield = (annualRevenue / quote.totalPrice) * 100
-  const netYield = (netIncome / quote.totalPrice) * 100
-  const paybackYears = netIncome > 0 ? quote.totalPrice / netIncome : 0
+  const grossYield = (annualRevenue / quoteUSD.totalPrice) * 100
+  const netYield = (netIncome / quoteUSD.totalPrice) * 100
+  const paybackYears = netIncome > 0 ? quoteUSD.totalPrice / netIncome : 0
 
   return {
     estimatedDailyRent: Math.round(dailyRate),
@@ -421,22 +369,15 @@ export function calculateROI(quote: QuoteResult, location: string = 'bali'): ROI
     grossYield: Math.round(grossYield * 10) / 10,
     netYield: Math.round(netYield * 10) / 10,
     paybackYears: Math.round(paybackYears * 10) / 10,
-    currency: quote.currency,
+    currency: 'USD', // ROI 以 USD 为基准
   }
 }
 
-export function convertPrice(amount: number, from: Currency, to: Currency): number {
-  if (from === to) return amount
-  if (from === 'USD' && to === 'IDR') return Math.round(amount * USD_TO_IDR)
-  if (from === 'IDR' && to === 'USD') return Math.round(amount / USD_TO_IDR)
-  return amount
-}
-
 // ============================================================
-// 5. Zustand Store 实现
+// 4. 步骤配置
 // ============================================================
 
-const STEP_ORDER: ConfigStep[] = [
+export const STEP_ORDER: ConfigStep[] = [
   'welcome',
   'select_style',
   'select_size',
@@ -462,29 +403,56 @@ const STEP_VALIDATION: Partial<Record<ConfigStep, (state: ConfiguratorState) => 
   },
 }
 
-const STEP_LABELS: Record<ConfigStep, string> = {
-  welcome: '欢迎',
-  select_style: '选择风格',
-  select_size: '选择面积',
-  select_tier: '选择档次',
-  select_addons: '增值模块',
-  review_quote: '报价预览',
-  submit_lead: '提交意向',
-  complete: '完成',
+// ============================================================
+// 5. Zustand Store 定义
+// ============================================================
+
+interface ConfiguratorState {
+  // ----- 用户配置 -----
+  style: VillaStyle | null
+  size: AreaSize | null
+  tier: TierLevel | null
+  addons: AddonCode[]
+
+  // ----- 用户信息 -----
+  userInfo: UserInfo | null
+
+  // ----- 计算结果（始终以 USD 存储）-----
+  quote: QuoteResult | null
+  roi: ROIResult | null
+
+  // ----- UI 状态 -----
+  currentStep: ConfigStep
+  isSubmitting: boolean
+  isComplete: boolean
+  currency: Currency
+  disclaimer: string
+  errors: Record<string, string>
+
+  // ----- Actions -----
+  setStyle: (style: VillaStyle) => void
+  setSize: (size: AreaSize) => void
+  setTier: (tier: TierLevel) => void
+  toggleAddon: (addon: AddonCode) => void
+  setUserInfo: (info: UserInfo) => void
+  setCurrency: (currency: Currency) => void
+
+  // ----- 导航 -----
+  goToStep: (step: ConfigStep) => void
+  nextStep: () => void
+  prevStep: () => void
+  reset: () => void
+
+  // ----- 算价引擎 -----
+  recalculateQuote: () => void
+
+  // ----- 提交控制 -----
+  setSubmitting: (loading: boolean) => void
+  complete: () => void
+  setError: (field: string, message: string) => void
+  clearErrors: () => void
 }
 
-const STEP_DESCRIPTIONS: Record<ConfigStep, string> = {
-  welcome: '开始您的别墅定制之旅',
-  select_style: '选择您喜欢的建筑风格',
-  select_size: '确定别墅的建筑面积',
-  select_tier: '选择装修档次',
-  select_addons: '添加您想要的增值模块',
-  review_quote: '查看您的专属报价方案',
-  submit_lead: '填写信息，提交意向',
-  complete: '提交成功！我们的团队将在 24 小时内联系您',
-}
-
-// ----- Store 创建 -----
 export const useConfiguratorStore = create<ConfiguratorState>()(
   persist(
     (set, get) => ({
@@ -503,30 +471,20 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
       disclaimer: DISCLAIMER,
       errors: {},
 
-      // ----- 配置 Actions（细粒度，避免 3D Canvas 重绘）-----
+      // ----- 配置 Actions -----
       setStyle: (style) => {
         set({ style })
-        // 自动重新计算报价
-        const state = get()
-        if (state.size && state.tier) {
-          state.recalculateQuote()
-        }
+        get().recalculateQuote()
       },
 
       setSize: (size) => {
         set({ size })
-        const state = get()
-        if (state.style && state.tier) {
-          state.recalculateQuote()
-        }
+        get().recalculateQuote()
       },
 
       setTier: (tier) => {
         set({ tier })
-        const state = get()
-        if (state.style && state.size) {
-          state.recalculateQuote()
-        }
+        get().recalculateQuote()
       },
 
       toggleAddon: (addon) => {
@@ -535,11 +493,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
           ? addons.filter((a) => a !== addon)
           : [...addons, addon]
         set({ addons: newAddons })
-        // 增值模块变化 → 重新计算报价
-        const state = get()
-        if (state.style && state.size && state.tier) {
-          state.recalculateQuote()
-        }
+        get().recalculateQuote()
       },
 
       setUserInfo: (info) => {
@@ -555,25 +509,18 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       setCurrency: (currency) => {
         set({ currency })
-        // 重新计算报价（切换货币显示）
-        const state = get()
-        if (state.quote) {
-          state.recalculateQuote()
-        }
+        // quote 本身不重算，但展示层 useQuote 会响应 currency 变化
       },
 
-      // ----- 导航 Actions -----
+      // ----- 导航 -----
       goToStep: (step) => {
         const state = get()
         const targetIndex = STEP_ORDER.indexOf(step)
-        // 检查前面的步骤是否已完成
         for (let i = 0; i < targetIndex; i++) {
           const prevStep = STEP_ORDER[i]
           const validator = STEP_VALIDATION[prevStep]
           if (validator && !validator(state)) {
-            set({
-              errors: { ...state.errors, [prevStep]: '请先完成此步骤' },
-            })
+            set({ errors: { ...state.errors, [prevStep]: '请先完成此步骤' } })
             return
           }
         }
@@ -583,19 +530,13 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
       nextStep: () => {
         const state = get()
         const currentIndex = STEP_ORDER.indexOf(state.currentStep)
-
-        // 验证当前步骤
         const validator = STEP_VALIDATION[state.currentStep]
         if (validator && !validator(state)) {
-          set({
-            errors: { ...state.errors, [state.currentStep]: '请完成当前步骤' },
-          })
+          set({ errors: { ...state.errors, [state.currentStep]: '请完成当前步骤' } })
           return
         }
-
         if (currentIndex >= STEP_ORDER.length - 1) return
-        const nextStep = STEP_ORDER[currentIndex + 1]
-        set({ currentStep: nextStep, errors: {} })
+        set({ currentStep: STEP_ORDER[currentIndex + 1], errors: {} })
       },
 
       prevStep: () => {
@@ -621,216 +562,167 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         })
       },
 
-      // ----- 算价引擎（核心）-----
+      // ----- 算价引擎 -----
       recalculateQuote: () => {
-        const state = get()
-        const { style, size, tier, addons, currency } = state
-
+        const { style, size, tier, addons } = get()
         if (!style || !size || !tier) {
           set({ quote: null, roi: null })
           return
         }
-
-        // 计算报价（USD 基准）
-        const quoteUSD = calculateQuote({ style, size, tier, addons })
-        const quote: QuoteResult = {
-          ...quoteUSD,
-          currency,
-          disclaimer: DISCLAIMER,
-        }
-
-        // 如果当前货币是 IDR，转换价格
-        if (currency === 'IDR') {
-          quote.basePrice = convertPrice(quote.basePrice, 'USD', 'IDR')
-          quote.addonsPrice = convertPrice(quote.addonsPrice, 'USD', 'IDR')
-          quote.managementFee = convertPrice(quote.managementFee, 'USD', 'IDR')
-          quote.totalPrice = convertPrice(quote.totalPrice, 'USD', 'IDR')
-          quote.breakdown.structure = convertPrice(quote.breakdown.structure, 'USD', 'IDR')
-          quote.breakdown.finishing = convertPrice(quote.breakdown.finishing, 'USD', 'IDR')
-          quote.breakdown.furniture = convertPrice(quote.breakdown.furniture, 'USD', 'IDR')
-          quote.breakdown.management = convertPrice(quote.breakdown.management, 'USD', 'IDR')
-          // 转换 addons
-          const convertedAddons: Record<AddonCode, number> = {} as Record<AddonCode, number>
-          for (const [key, val] of Object.entries(quote.breakdown.addons)) {
-            convertedAddons[key as AddonCode] = convertPrice(val, 'USD', 'IDR')
-          }
-          quote.breakdown.addons = convertedAddons
-        }
-
-        // 计算 ROI（基于 USD 总价，因为租金数据以 USD 为基准）
-        const roiBase = calculateROI(quoteUSD, 'bali')
-        const roi: ROIResult = {
-          ...roiBase,
-          currency,
-        }
-        if (currency === 'IDR') {
-          roi.estimatedDailyRent = convertPrice(roi.estimatedDailyRent, 'USD', 'IDR')
-          roi.estimatedMonthlyRent = convertPrice(roi.estimatedMonthlyRent, 'USD', 'IDR')
-          roi.estimatedYearlyRent = convertPrice(roi.estimatedYearlyRent, 'USD', 'IDR')
-        }
-
+        const quote = calculateQuote({ style, size, tier, addons })
+        const roi = calculateROI(quote)
         set({ quote, roi })
       },
 
       // ----- 提交控制 -----
       setSubmitting: (isSubmitting) => set({ isSubmitting }),
-
       complete: () => set({ isComplete: true, currentStep: 'complete' }),
-
       setError: (field, message) => {
         const { errors } = get()
         set({ errors: { ...errors, [field]: message } })
       },
-
       clearErrors: () => set({ errors: {} }),
-
-      // ============================================================
-      // 6. 细粒度 Selector 辅助（计算属性）
-      // 用于组件中精确获取所需数据，避免 3D Canvas 重绘
-      // ============================================================
-
-      get selectedStyleData() {
-        const state = get()
-        return STYLE_PRESETS.find((s) => s.id === state.style) || null
-      },
-
-      get selectedSizeData() {
-        const state = get()
-        return SIZE_OPTIONS.find((s) => s.value === state.size) || null
-      },
-
-      get selectedTierData() {
-        const state = get()
-        return TIER_OPTIONS.find((t) => t.value === state.tier) || null
-      },
-
-      get selectedAddonsData() {
-        const state = get()
-        return ADDON_OPTIONS.filter((a) => state.addons.includes(a.code))
-      },
-
-      get canGoNext() {
-        const state = get()
-        const validator = STEP_VALIDATION[state.currentStep]
-        return validator ? validator(state) : true
-      },
-
-      get canGoPrev() {
-        const state = get()
-        return STEP_ORDER.indexOf(state.currentStep) > 0
-      },
-
-      get progress() {
-        const state = get()
-        const total = STEP_ORDER.length - 1
-        const current = STEP_ORDER.indexOf(state.currentStep)
-        return Math.round((current / total) * 100)
-      },
-
-      get stepLabel() {
-        const state = get()
-        return STEP_LABELS[state.currentStep] || ''
-      },
-
-      get stepDescription() {
-        const state = get()
-        return STEP_DESCRIPTIONS[state.currentStep] || ''
-      },
-
-      get isConfigComplete() {
-        const state = get()
-        return !!(
-          state.style &&
-          state.size &&
-          state.tier &&
-          state.quote &&
-          state.userInfo &&
-          state.userInfo.name.trim().length > 0 &&
-          state.userInfo.email.trim().length > 0 &&
-          state.userInfo.phone.trim().length > 0
-        )
-      },
-
-      get displayPrice() {
-        const state = get()
-        if (!state.quote) return '$0'
-        const symbol = state.currency === 'USD' ? '$' : 'Rp'
-        const amount = state.quote.totalPrice
-        if (state.currency === 'IDR') {
-          return `${symbol} ${amount.toLocaleString('id-ID')}`
-        }
-        return `${symbol}${amount.toLocaleString()}`
-      },
-
-      get displayPriceIDR() {
-        const state = get()
-        if (!state.quote) return 'Rp0'
-        const amount = convertPrice(state.quote.totalPrice, 'USD', 'IDR')
-        return `Rp ${amount.toLocaleString('id-ID')}`
-      },
     }),
     {
       name: 'nusantara-configurator-storage',
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         style: state.style,
         size: state.size,
         tier: state.tier,
         addons: state.addons,
         userInfo: state.userInfo,
-        quote: state.quote,
-        roi: state.roi,
+        currency: state.currency,
         currentStep: state.currentStep,
         isComplete: state.isComplete,
-        currency: state.currency,
+        // 注意: quote 和 roi 不持久化，每次重新计算
       }),
     }
   )
 )
 
 // ============================================================
-// 7. 细粒度 Selector Hooks（用于组件中精确订阅）
+// 6. 高性能 Selector Hooks
 // ============================================================
 
-/** 仅订阅配置选项（用于 3D Canvas 组件，避免重绘） */
+/**
+ * 仅供 3D Canvas 组件使用
+ * 只订阅配置选项，避免其他 UI 状态变化触发 3D 重绘
+ */
 export const useConfigSelection = () => {
-  return useConfiguratorStore((state) => ({
-    style: state.style,
-    size: state.size,
-    tier: state.tier,
-    addons: state.addons,
+  return useConfiguratorStore((s) => ({
+    style: s.style,
+    size: s.size,
+    tier: s.tier,
+    addons: s.addons,
   }))
 }
 
-/** 仅订阅报价结果（用于报价展示组件） */
+/**
+ * 供报价展示卡片使用
+ * 自动处理 USD ↔ IDR 转换，返回展示用的格式化价格
+ */
 export const useQuote = () => {
-  return useConfiguratorStore((state) => ({
-    quote: state.quote,
-    roi: state.roi,
-    currency: state.currency,
-    disclaimer: state.disclaimer,
-    displayPrice: state.displayPrice,
-  }))
+  const quoteUSD = useConfiguratorStore((s) => s.quote)
+  const roiUSD = useConfiguratorStore((s) => s.roi)
+  const currency = useConfiguratorStore((s) => s.currency)
+  const disclaimer = useConfiguratorStore((s) => s.disclaimer)
+
+  if (!quoteUSD) {
+    return {
+      quote: null,
+      roi: null,
+      currency,
+      disclaimer,
+      displayPrice: '$0',
+      displayPriceIDR: 'Rp 0',
+    }
+  }
+
+  const isIDR = currency === 'IDR'
+  const totalPrice = isIDR ? convertPrice(quoteUSD.totalPrice, 'USD', 'IDR') : quoteUSD.totalPrice
+  const symbol = isIDR ? 'Rp ' : '$'
+  const locale = isIDR ? 'id-ID' : 'en-US'
+
+  // 同时提供两种货币的展示（方便切换）
+  const displayPrice = `${symbol}${totalPrice.toLocaleString(locale)}`
+  const displayPriceIDR = `Rp ${convertPrice(quoteUSD.totalPrice, 'USD', 'IDR').toLocaleString('id-ID')}`
+
+  // 如果当前是 IDR，ROI 也需要转换
+  let roi = roiUSD
+  if (roi && isIDR) {
+    roi = {
+      ...roi,
+      estimatedDailyRent: convertPrice(roi.estimatedDailyRent, 'USD', 'IDR'),
+      estimatedMonthlyRent: convertPrice(roi.estimatedMonthlyRent, 'USD', 'IDR'),
+      estimatedYearlyRent: convertPrice(roi.estimatedYearlyRent, 'USD', 'IDR'),
+      currency: 'IDR',
+    }
+  }
+
+  return {
+    quote: quoteUSD,
+    roi,
+    currency,
+    disclaimer,
+    displayPrice,
+    displayPriceIDR,
+  }
 }
 
-/** 仅订阅导航状态（用于步骤指示器） */
+/**
+ * 供步骤导航组件使用
+ * 只订阅导航状态，避免配置变化影响导航展示
+ */
 export const useConfigNavigation = () => {
-  return useConfiguratorStore((state) => ({
-    currentStep: state.currentStep,
-    progress: state.progress,
-    stepLabel: state.stepLabel,
-    stepDescription: state.stepDescription,
-    canGoNext: state.canGoNext,
-    canGoPrev: state.canGoPrev,
-    isComplete: state.isComplete,
+  return useConfiguratorStore((s) => ({
+    currentStep: s.currentStep,
+    isComplete: s.isComplete,
+    canGoNext: (() => {
+      const validator = STEP_VALIDATION[s.currentStep]
+      return validator ? validator(s) : true
+    })(),
+    canGoPrev: STEP_ORDER.indexOf(s.currentStep) > 0,
+    progress: (() => {
+      const total = STEP_ORDER.length - 1
+      const current = STEP_ORDER.indexOf(s.currentStep)
+      return Math.round((current / total) * 100)
+    })(),
   }))
 }
 
-/** 仅订阅用户信息（用于表单组件） */
+/**
+ * 供表单组件使用
+ * 只订阅用户信息和错误状态
+ */
 export const useUserInfo = () => {
-  return useConfiguratorStore((state) => ({
-    userInfo: state.userInfo,
-    setUserInfo: state.setUserInfo,
-    errors: state.errors,
-    clearErrors: state.clearErrors,
+  return useConfiguratorStore((s) => ({
+    userInfo: s.userInfo,
+    errors: s.errors,
+    setUserInfo: s.setUserInfo,
+    clearErrors: s.clearErrors,
+  }))
+}
+
+/**
+ * 供提交按钮使用
+ * 只订阅提交状态和完整度
+ */
+export const useSubmission = () => {
+  return useConfiguratorStore((s) => ({
+    isSubmitting: s.isSubmitting,
+    isComplete: s.isComplete,
+    isConfigReady: !!(
+      s.style &&
+      s.size &&
+      s.tier &&
+      s.quote &&
+      s.userInfo &&
+      s.userInfo.name.trim().length > 0 &&
+      s.userInfo.email.trim().length > 0 &&
+      s.userInfo.phone.trim().length > 0
+    ),
+    setSubmitting: s.setSubmitting,
+    complete: s.complete,
   }))
 }
