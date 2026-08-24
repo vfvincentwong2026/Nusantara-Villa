@@ -1,89 +1,139 @@
-# Nusantara-Villa
-“以数字技术重塑印尼豪宅建设：可视化你的梦幻别墅，实时演算透明造价，一站式安心交付。”
-# 🏛️ Nusantara Villa 3D Configurator & Turnkey BOQ Estimator
+# 🏡 Nusantara Villa
 
-> **面向印尼（巴厘岛/雅加达/龙目岛/新首都）高端别墅市场的 3D 交互配置、实时造价（BOQ）测算与一站式整装交付（Design-Build & Turnkey）数字平台。**
+> **印尼高端别墅「3D 交互配置 + 实时报价 + 一站式整装交付」平台。**
+>
+> 让海外投资者在线选择别墅风格、实时测算造价、一键生成方案书，3 分钟完成从“想法”到“意向”的转化。
 
-[![Deployed on Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-F38020?logo=cloudflare&logoColor=white)](https://pages.cloudflare.com/)
-[![Framework](https://img.shields.io/badge/Framework-Next.js%2014-black?logo=next.js)](https://nextjs.org/)
-[![3D Engine](https://img.shields.io/badge/3D%20Engine-React%20Three%20Fiber-blue?logo=three.js)](https://docs.pmnd.rs/react-three-fiber/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange.svg)](https://developers.cloudflare.com/workers/)
+[![Status: v1.0](https://img.shields.io/badge/Status-v1.0-green.svg)]()
 
----
 
-## 📌 项目背景与定位 (Overview)
+## 这个平台解决什么问题？
 
-海外投资者与高净值业主在印尼进行别墅投资建设时，常面临**信息不对称、跨国沟通成本高、恶意加价以及施工质量难以监控**等痛点。
+海外投资者在印尼建别墅，面临四大痛点：
 
-**Nusantara Villa** 采用“保时捷配置器”式的轻量级 Web 3D 交互，将复杂的 CAD/3D 建模转化为简单直观的在线选配工具。结合本土施工成本算法，实现**“所见即所得、预算透明可控、秒级获客线索拦截”**，打造高信任度、高转化率的数字化高端建筑交付通道。
+| 痛点 | 传统方式 | Nusantara Villa 的做法 |
+| :--- | :--- | :--- |
+| **无法线上看房** | 必须飞印尼实地考察 | **3D 交互配置器**，在线漫游别墅空间 |
+| **价格不透明** | 多次询价、反复沟通 | **实时 BOQ 造价引擎**，选配即报价 |
+| **投资回报看不清** | 靠中介口头承诺 | **ROI 测算器**，结合租金大数据自动计算 |
+| **沟通效率低** | 微信/邮件反复拉扯 | **一键生成 PDF 方案书**，自动发送给客户 |
 
----
+**一句话：把“别墅装修”做成像“买手机”一样简单——选配置、看价格、提交意向，3 分钟完成。**
 
-## 🌟 核心功能 (Key Features)
 
-* **🎨 3D 交互选配 (Interactive 3D Configurator)**
-  * 基于 WebGL / React Three Fiber 的高质感热带别墅场景渲染。
-  * 支持 Modern Tropical（现代热带风）、Wabi-Sabi（侘寂风）、Mediterranean（地中海风）等主流风格及材质实时切换。
-* **💰 动态 BOQ 与预算引擎 (Live BOQ Estimator)**
-  * 根据建筑面积（㎡）、选配档次（Standard / Luxury / Ultra-Luxury）实时演算施工与硬装软装造价。
-  * 内置印尼本土增值选配模块：无边泳池（Infinity Pool）、屋顶露台（Rooftop Deck）、SPA 亭（Yoga Shala）、全屋智能与太阳能系统。
-* **📊 投资回报率算力模型 (Rental Yield & ROI Calculator)**
-  * 针对巴厘岛/龙目岛外籍投资者，根据项目预估总造价与当地租金大数据，实时测算日租金收益与年化投资回报率（ROI）。
-* **📄 自动化 PDF 方案书生成 (Instant PDF Proposals)**
-  * 选配完成后，前端一键渲染包含初步材料清单（BOQ）、工程阶段规划与免责声明的精美 PDF 方案书。
-* **📱 毫秒级线索拦截与推送 (High-Conversion Lead Capture)**
-  * 无缝集成 Telegram Bot API & WhatsApp Business API，当客户提交意向时，毫秒级将客户选配数据与联系方式推送至项目经理手机。
+## 🎯 核心功能
 
----
+| 功能模块 | 说明 |
+| :--- | :--- |
+| **🎨 3D 交互配置器** | 选择别墅风格（现代热带 / 侘寂风 / 轻奢），实时切换材质、配色、家具 |
+| **💰 实时 BOQ 与预算引擎** | 根据面积（150/200/300㎡）+ 档次（标准/豪华/超豪华）自动生成施工与装修造价 |
+| **📊 ROI 投资回报测算** | 结合当地租金大数据，自动计算日租金收益和年化投资回报率 |
+| **📄 一键生成 PDF 方案书** | 包含 3D 效果图、材料清单、工程规划、造价明细 |
+| **⚡ 毫秒级线索推送** | 客户提交意向 → Telegram/WhatsApp 实时推送至项目经理手机 |
+| **☁️ 边缘部署** | Cloudflare Pages + Workers + D1，印尼本地访问极速 |
 
-## 🏗️ 技术架构 (Tech Stack)
 
-```text
-[ 前端展示与交互层 (Frontend) ]
-  ├── Next.js 14 (App Router) + TypeScript
-  ├── React Three Fiber (R3F) + Drei (3D 引擎)
-  ├── TailwindCSS + Zustand (状态管理与报价计算)
-  └── @react-pdf/renderer (客户端动态 PDF 导出)
+## 🗺️ 路由
 
-[ 边缘服务与全栈部署 (Serverless & Cloudflare) ]
-  ├── Cloudflare Pages (静态资源与 WebGL 3D 模型全球 CDN 加速)
-  ├── Cloudflare Workers (边缘 API 逻辑处理与线索转发)
-  └── Cloudflare D1 (轻量级 SQLite 数据库，用于意向表单存储)
+| 路由 | 页面 | 说明 |
+| :--- | :--- | :--- |
+| `/` | 首页 | 项目介绍 + 快速入口 |
+| `/configurator` | 配置器 | 3D 别墅配置 + BOQ 报价 + 线索提交 |
+| `/api/lead` | API | 线索提交接口 (Edge Runtime) |
 
-[ 通讯与通知 (Integrations) ]
-  ├── Telegram Bot API (团队实时接单提醒)
-  ├── WhatsApp Business API (印尼本地客户即时沟通)
-  └── Resend / SendGrid (自动化邮件通知)
 
-快速开始 (Quick Start)
-环境准备 (Prerequisites)
-Node.js >= 18.17.0
+## 🛠️ 技术选型
 
-npm / pnpm / yarn
+| 层级 | 技术 |
+| :--- | :--- |
+| **前端框架** | Next.js 14 (App Router) + TypeScript |
+| **3D 引擎** | React Three Fiber + Three.js |
+| **UI 组件** | shadcn/ui + Tailwind CSS |
+| **后端 API** | Cloudflare Workers (Edge Runtime) |
+| **数据库** | Cloudflare D1 (SQLite) |
+| **文件存储** | Cloudflare R2 (PDF 方案书) |
+| **消息推送** | Telegram Bot API / WhatsApp Business API |
+| **状态管理** | Zustand (带 persist) |
 
-本地开发 (Local Setup)
-克隆代码仓库
-git clone [https://github.com/your-username/nusantara-villa.git](https://github.com/your-username/nusantara-villa.git)
-cd nusantara-villa
 
-安装依赖
+## 📂 项目结构
+Nusantara-Villa/
+├── app/
+│ ├── api/
+│ │ └── lead/
+│ │ └── route.ts # Edge API: 线索提交
+│ ├── configurator/
+│ │ └── page.tsx # 配置器主页面 (/configurator)
+│ ├── layout.tsx # 根布局
+│ └── page.tsx # 首页 (/)
+├── components/
+│ ├── 3d/
+│ │ └── VillaScene.tsx # 3D 场景组件 (R3F)
+│ ├── canvas/
+│ │ └── VillaCanvas.tsx # VillaScene 别名导出
+│ ├── configurator/
+│ │ ├── StepContainer.tsx # 步骤容器 (进度条 + 导航)
+│ │ ├── SelectionGrid.tsx # 选择网格 (风格/面积/档次/增值)
+│ │ ├── QuoteSummary.tsx # 报价汇总 (BOQ + ROI)
+│ │ └── LeadForm.tsx # 线索提交表单
+│ └── ui/
+│ └── CurrencyToggle.tsx # USD/IDR 货币切换
+├── store/
+│ └── useConfiguratorStore.ts # Zustand 状态管理 + 算价引擎
+├── lib/
+│ ├── utils.ts # 通用工具函数
+│ └── telegram.ts # Telegram 通知服务 (Edge 兼容)
+├── docs/
+│ ├── ARCHITECTURE.md # 技术架构文档
+│ ├── API_REFERENCE.md # API 参考文档
+│ └── FRONTEND_PAGES.md # 前端页面设计
+├── .env.example # 环境变量示例
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── README.md
+
+text
+
+
+## 🚀 快速开始
+
+### 前置条件
+- Node.js 18+
+- Cloudflare 账号（免费）
+- Telegram Bot Token（用于线索推送）
+
+### 安装与运行
+
+```bash
+# 1. 克隆
+git clone https://github.com/vfvincentwong2026/Nusantara-Villa.git
+cd Nusantara-Villa
+
+# 2. 安装依赖
 npm install
 
-配置环境变量
-在项目根目录下创建 .env.local 文件：
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_telegram_chat_id
-NEXT_PUBLIC_WHATSAPP_NUMBER=6281234567890
+# 3. 配置环境变量
+cp .env.example .env.local
+# 填入 TELEGRAM_BOT_TOKEN 和 TELEGRAM_CHAT_ID
 
-启动开发服务器
+# 4. 启动开发服务器
 npm run dev
 
-打开浏览器访问 http://localhost:3000 即可查看效果。☁️ Cloudflare 部署指南 (Deployment)本项目针对 Cloudflare Pages 进行了深度优化，可实现低成本、极速部署：将代码推送到你的 GitHub 仓库。登录 Cloudflare Dashboard $\rightarrow$ Workers & Pages $\rightarrow$ Create Application $\rightarrow$ Pages $\rightarrow$ Connect to Git。选择 nusantara-villa 仓库，构建设置如下：Framework preset: Next.jsBuild command: npx @cloudflare/next-on-pagesBuild output directory: .vercel/output/static在 Cloudflare Pages 后台环境变量（Environment Variables）中添加你的 Telegram Bot Token 和 WhatsApp 接收号码。点击 Save and Deploy，即可完成全球 CDN 部署。🗺️ 产品迭代路线图 (Roadmap)[x] Phase 1: MVP 验证 — WebGL 3D 模型渲染 + 基础参数造价计算器 + Cloudflare Pages 部署。[ ] Phase 2: 交互与线索拦截 — 支持多区域材质实时替换、动态 PDF 方案书生成、Telegram/WhatsApp 秒级线索推送。[ ] Phase 3: 印尼本土化 — 支持英语/印尼语/中文多语言切换、集成印尼建筑合规许可（PBG/SLF）咨询模块。[ ] Phase 4: 数字化交付看板 — 增加 "Live Construction Monitor"（远程施工进度与日志看板），打造“线上选配 ➔ 合同签订 ➔ 远程监工 ➔ 整装交付”的全流程闭环。📄 开源协议 (License)本项目采用 MIT License 开源协议。
-
-
-🔗 姐妹项目
+# 5. 打开浏览器
+# 首页: http://localhost:3000
+# 配置器: http://localhost:3000/configurator
+部署到 Cloudflare
+bash
+npm run build
+npx wrangler pages deploy ./out --project-name=nusantara-villa
+🔗 相关项目
 项目	定位	关系
+Nusantara Villa（本项目）	C端转化平台	3D 体验 → 实时报价 → 意向转化
 IndoScout-D-B	B端获客引擎	主动挖掘客户 → 销售跟进
-Nusantara-Villa（本项目）	C端转化平台	3D 体验 → 实时报价 → 意向转化
+📄 许可证
+MIT License
 
