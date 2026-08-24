@@ -9,7 +9,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { useConfiguratorStore, useQuote } from '@/store/useConfiguratorStore'
 import { StepContainer } from '@/components/configurator/StepContainer'
 import { SelectionGrid } from '@/components/configurator/SelectionGrid'
@@ -17,7 +17,26 @@ import { QuoteSummary } from '@/components/configurator/QuoteSummary'
 import { LeadForm } from '@/components/configurator/LeadForm'
 import { CurrencyToggle } from '@/components/ui/CurrencyToggle'
 
+// ============================================================
+// 静态常量（模块作用域，避免每次渲染重新创建）
+// ============================================================
+
+const STYLE_NAMES: Record<string, string> = {
+  modern_tropical: '现代热带',
+  wabi_sabi: '侘寂风',
+  mediterranean: '地中海',
+}
+
+const TIER_NAMES: Record<string, string> = {
+  standard: '标准',
+  luxury: '豪华',
+  ultra_luxury: '超豪华',
+}
+
+// ============================================================
 // 3D 场景：动态导入，禁用 SSR
+// ============================================================
+
 const VillaScene = dynamic(
   () => import('@/components/3d/VillaScene').then((mod) => mod.VillaScene),
   {
@@ -40,7 +59,6 @@ const VillaScene = dynamic(
 
 function WelcomeStep() {
   const nextStep = useConfiguratorStore((s) => s.nextStep)
-  const style = useConfiguratorStore((s) => s.style)
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center py-8">
@@ -68,26 +86,18 @@ function WelcomeStep() {
 }
 
 // ============================================================
-// 步骤: 增值模块
-// ============================================================
-
-function AddonsStep() {
-  return <SelectionGrid type="addons" />
-}
-
-// ============================================================
 // 步骤: 完成页
 // ============================================================
 
 function CompletionStep() {
   const reset = useConfiguratorStore((s) => s.reset)
-  const { quote, displayPrice } = useQuote()
   const style = useConfiguratorStore((s) => s.style)
   const size = useConfiguratorStore((s) => s.size)
   const tier = useConfiguratorStore((s) => s.tier)
+  const { quote, displayPrice } = useQuote()
 
-  const styleName = { modern_tropical: '现代热带', wabi_sabi: '侘寂风', mediterranean: '地中海' }[style || 'modern_tropical']
-  const tierName = { standard: '标准', luxury: '豪华', ultra_luxury: '超豪华' }[tier || 'standard']
+  const styleName = style ? STYLE_NAMES[style] : '现代热带'
+  const tierName = tier ? TIER_NAMES[tier] : '标准'
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center py-8">
@@ -107,7 +117,7 @@ function CompletionStep() {
           <div className="flex justify-center gap-4 mt-2 text-xs text-gray-500">
             <span>{styleName}</span>
             <span>•</span>
-            <span>{size}m²</span>
+            <span>{size || '—'} m²</span>
             <span>•</span>
             <span>{tierName}</span>
           </div>
@@ -129,7 +139,7 @@ function CompletionStep() {
 
 export default function HomePage() {
   const currentStep = useConfiguratorStore((s) => s.currentStep)
-  const isComplete = useConfiguratorStore((s) => s.isComplete)
+  const disclaimer = useConfiguratorStore((s) => s.disclaimer)
 
   // 步骤 → 内容映射
   const renderStepContent = () => {
@@ -143,7 +153,7 @@ export default function HomePage() {
       case 'select_tier':
         return <SelectionGrid type="tier" />
       case 'select_addons':
-        return <AddonsStep />
+        return <SelectionGrid type="addons" />
       case 'review_quote':
         return <QuoteSummary />
       case 'submit_lead':
@@ -224,7 +234,7 @@ export default function HomePage() {
         {/* ---------- 免责声明 ---------- */}
         <div className="mt-5 text-center">
           <p className="text-xs text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            ⚠️ {useConfiguratorStore.getState().disclaimer}
+            ⚠️ {disclaimer}
           </p>
         </div>
       </div>
