@@ -11,6 +11,7 @@ import {
   useConfiguratorStore,
   useConfigNavigation,
   STEP_ORDER,
+  type ConfigStep,
 } from '@/store/useConfiguratorStore'
 
 interface StepContainerProps {
@@ -27,7 +28,7 @@ interface StepContainerProps {
 }
 
 // 从 store 的 STEP_ORDER 派生步骤点（排除 welcome 和 complete）
-const STEP_DOTS = STEP_ORDER.filter(
+const STEP_DOTS: ConfigStep[] = STEP_ORDER.filter(
   (step) => step !== 'welcome' && step !== 'complete'
 )
 
