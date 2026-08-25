@@ -1,0 +1,21 @@
+
+> nusantara-villa@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ○ Compiling / ...
+ ✓ Compiled / in 9.5s (1671 modules)
+ GET / 200 in 9754ms
+ ○ Compiling /configurator ...
+ ✓ Compiled /configurator in 4.9s (1668 modules)
+ GET /configurator 200 in 5022ms
+ ○ Compiling /api/lead ...
+ ✓ Compiled /api/lead in 666ms (136 modules)
+ GET /api/lead 200 in 808ms
+[Lead API] leadId=NV-MT8C3GQB-BNDQ | telegram=false | time=25ms
+ POST /api/lead 200 in 36ms
+ GET /configurator 200 in 64ms
