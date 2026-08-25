@@ -1,0 +1,631 @@
+[
+  {
+    "slug": "taohuayuan-jiji-855",
+    "title": "绿城·桃花源 侘寂大宅",
+    "location": "浙江义乌",
+    "areaSqm": 855,
+    "styleTag": "wabi_sabi",
+    "styleLabel": "侘寂风",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "以侘寂美学打造 855㎡ 湖山私宅，粗粝材质与留白空间交织出静谧的居住哲学。",
+    "designHighlights": [
+      "微水泥与原木的自然肌理",
+      "大面积留白与弧形过渡",
+      "无主灯照明设计",
+      "庭院与室内视线贯通"
+    ],
+    "coverImage": "/cases/taohuayuan-jiji-855/p61-0.jpg",
+    "galleryImages": [
+      "/cases/taohuayuan-jiji-855/p61-0.jpg",
+      "/cases/taohuayuan-jiji-855/p62-0.jpg",
+      "/cases/taohuayuan-jiji-855/p63-0.jpg",
+      "/cases/taohuayuan-jiji-855/p64-0.jpg",
+      "/cases/taohuayuan-jiji-855/p65-0.jpg",
+      "/cases/taohuayuan-jiji-855/p66-0.jpg"
+    ],
+    "sortOrder": 0
+  },
+  {
+    "slug": "taohuayuan-jiji-500",
+    "title": "绿城·桃花源 侘寂雅居",
+    "location": "浙江义乌",
+    "areaSqm": 500,
+    "styleTag": "wabi_sabi",
+    "styleLabel": "侘寂风",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "500㎡ 侘寂风别墅，以质朴材质和时间质感营造返璞归真的生活场域。",
+    "designHighlights": [
+      "黏土质感墙面",
+      "亚麻与藤编软装",
+      "低饱和度大地色系",
+      "禅意茶室空间"
+    ],
+    "coverImage": "/cases/taohuayuan-jiji-500/p67-0.jpg",
+    "galleryImages": [
+      "/cases/taohuayuan-jiji-500/p67-0.jpg",
+      "/cases/taohuayuan-jiji-500/p68-0.jpg",
+      "/cases/taohuayuan-jiji-500/p69-0.jpg",
+      "/cases/taohuayuan-jiji-500/p69-1.jpg",
+      "/cases/taohuayuan-jiji-500/p70-0.jpg",
+      "/cases/taohuayuan-jiji-500/p71-0.jpg",
+      "/cases/taohuayuan-jiji-500/p72-0.jpg"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "slug": "lvgu-yunxi",
+    "title": "绿谷云溪",
+    "location": "浙江义乌",
+    "areaSqm": 450,
+    "styleTag": "wabi_sabi",
+    "styleLabel": "侘寂",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "450㎡ 侘寂别墅，将自然残缺之美融入当代居住空间。",
+    "designHighlights": [
+      "原生木材大面积运用",
+      "柔和间接照明",
+      "开放式格局",
+      "自然石材点缀"
+    ],
+    "coverImage": "/cases/lvgu-yunxi/p77-0.jpg",
+    "galleryImages": [
+      "/cases/lvgu-yunxi/p77-0.jpg",
+      "/cases/lvgu-yunxi/p78-0.jpg",
+      "/cases/lvgu-yunxi/p78-1.jpg",
+      "/cases/lvgu-yunxi/p78-2.jpg",
+      "/cases/lvgu-yunxi/p79-0.jpg",
+      "/cases/lvgu-yunxi/p79-1.jpg",
+      "/cases/lvgu-yunxi/p80-0.jpg",
+      "/cases/lvgu-yunxi/p80-1.jpg",
+      "/cases/lvgu-yunxi/p81-0.jpg",
+      "/cases/lvgu-yunxi/p81-1.jpg"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "slug": "tingan-xiaolu",
+    "title": "杭州·汀岸晓庐",
+    "location": "浙江杭州",
+    "areaSqm": 400,
+    "styleTag": "mediterranean",
+    "styleLabel": "法式风格",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "法式风格滨江别墅，浪漫线条与精致雕花重现巴黎左岸的优雅。",
+    "designHighlights": [
+      "法式护墙板与线脚",
+      "水晶吊灯与壁灯组合",
+      "奶油白主色调",
+      "拱形门窗元素"
+    ],
+    "coverImage": "/cases/tingan-xiaolu/p01-0.jpg",
+    "galleryImages": [
+      "/cases/tingan-xiaolu/p01-0.jpg",
+      "/cases/tingan-xiaolu/p02-0.jpg",
+      "/cases/tingan-xiaolu/p03-0.jpg",
+      "/cases/tingan-xiaolu/p04-0.jpg",
+      "/cases/tingan-xiaolu/p04-1.jpg",
+      "/cases/tingan-xiaolu/p05-0.jpg",
+      "/cases/tingan-xiaolu/p06-0.jpg",
+      "/cases/tingan-xiaolu/p07-0.jpg",
+      "/cases/tingan-xiaolu/p08-0.jpg",
+      "/cases/tingan-xiaolu/p08-1.jpg",
+      "/cases/tingan-xiaolu/p09-0.jpg",
+      "/cases/tingan-xiaolu/p09-1.jpg"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "slug": "mantuo-huayuan",
+    "title": "杭州·曼陀花园",
+    "location": "浙江杭州",
+    "areaSqm": 450,
+    "styleTag": "mediterranean",
+    "styleLabel": "法式风格",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "法式花园别墅，将宫廷式仪式感与居家舒适度巧妙平衡。",
+    "designHighlights": [
+      "法式古典家具",
+      "雕花吊顶",
+      "花园景观引入室内",
+      "双挑空客厅"
+    ],
+    "coverImage": "/cases/mantuo-huayuan/p10-0.jpg",
+    "galleryImages": [
+      "/cases/mantuo-huayuan/p10-0.jpg",
+      "/cases/mantuo-huayuan/p11-0.jpg",
+      "/cases/mantuo-huayuan/p11-1.jpg",
+      "/cases/mantuo-huayuan/p12-0.jpg",
+      "/cases/mantuo-huayuan/p13-0.jpg",
+      "/cases/mantuo-huayuan/p14-0.jpg",
+      "/cases/mantuo-huayuan/p15-0.jpg",
+      "/cases/mantuo-huayuan/p16-0.jpg"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "slug": "shaoxing-xiyuan",
+    "title": "绍兴·玺园",
+    "location": "浙江绍兴",
+    "areaSqm": 500,
+    "styleTag": "mediterranean",
+    "styleLabel": "法式轻奢",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "法式轻奢别墅，以现代手法解构古典法式，轻盈而不失贵气。",
+    "designHighlights": [
+      "轻奢金属线条",
+      "大理石与丝绒碰撞",
+      "法式对称布局",
+      "定制艺术陈设"
+    ],
+    "coverImage": "/cases/shaoxing-xiyuan/p36-0.jpg",
+    "galleryImages": [
+      "/cases/shaoxing-xiyuan/p36-0.jpg",
+      "/cases/shaoxing-xiyuan/p37-0.jpg",
+      "/cases/shaoxing-xiyuan/p38-0.jpg",
+      "/cases/shaoxing-xiyuan/p38-1.jpg",
+      "/cases/shaoxing-xiyuan/p39-0.jpg",
+      "/cases/shaoxing-xiyuan/p40-0.jpg",
+      "/cases/shaoxing-xiyuan/p41-0.jpg",
+      "/cases/shaoxing-xiyuan/p42-0.jpg",
+      "/cases/shaoxing-xiyuan/p43-0.jpg",
+      "/cases/shaoxing-xiyuan/p44-0.jpg",
+      "/cases/shaoxing-xiyuan/p45-0.jpg",
+      "/cases/shaoxing-xiyuan/p46-0.jpg",
+      "/cases/shaoxing-xiyuan/p47-0.jpg",
+      "/cases/shaoxing-xiyuan/p48-0.jpg",
+      "/cases/shaoxing-xiyuan/p49-0.jpg",
+      "/cases/shaoxing-xiyuan/p50-0.jpg",
+      "/cases/shaoxing-xiyuan/p51-0.jpg",
+      "/cases/shaoxing-xiyuan/p51-1.jpg",
+      "/cases/shaoxing-xiyuan/p52-0.jpg"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "slug": "taohuayuan-fa",
+    "title": "绿城·桃花源 法式府邸",
+    "location": "浙江义乌",
+    "areaSqm": 630,
+    "styleTag": "mediterranean",
+    "styleLabel": "法式",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "630㎡ 法式府邸，经典三段式立面内的现代法式生活。",
+    "designHighlights": [
+      "法式穹顶元素",
+      "进口大理石地面",
+      "旋转楼梯",
+      "宴会级餐厅"
+    ],
+    "coverImage": "/cases/taohuayuan-fa/p57-0.jpg",
+    "galleryImages": [
+      "/cases/taohuayuan-fa/p57-0.jpg",
+      "/cases/taohuayuan-fa/p58-0.jpg",
+      "/cases/taohuayuan-fa/p59-0.jpg",
+      "/cases/taohuayuan-fa/p60-0.jpg"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "slug": "hz-xianggelila",
+    "title": "杭州·香格里拉",
+    "location": "浙江杭州",
+    "areaSqm": 600,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代风格",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "600㎡ 现代风格别墅，以极简线条和大面积玻璃引景入室。",
+    "designHighlights": [
+      "全景落地窗",
+      "开放式中西厨",
+      "木饰面与石材对话",
+      "智能家居预埋"
+    ],
+    "coverImage": "/cases/hz-xianggelila/p17-0.jpg",
+    "galleryImages": [
+      "/cases/hz-xianggelila/p17-0.jpg",
+      "/cases/hz-xianggelila/p18-0.jpg",
+      "/cases/hz-xianggelila/p18-1.jpg",
+      "/cases/hz-xianggelila/p19-0.jpg",
+      "/cases/hz-xianggelila/p20-0.jpg",
+      "/cases/hz-xianggelila/p21-0.jpg",
+      "/cases/hz-xianggelila/p22-0.jpg",
+      "/cases/hz-xianggelila/p23-0.jpg",
+      "/cases/hz-xianggelila/p24-0.jpg",
+      "/cases/hz-xianggelila/p25-0.jpg",
+      "/cases/hz-xianggelila/p26-0.jpg",
+      "/cases/hz-xianggelila/p27-0.jpg",
+      "/cases/hz-xianggelila/p28-0.jpg",
+      "/cases/hz-xianggelila/p29-0.jpg",
+      "/cases/hz-xianggelila/p30-0.jpg"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "slug": "senshan-bandao",
+    "title": "义乌·森山半岛",
+    "location": "浙江义乌",
+    "areaSqm": 1200,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代风格",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "1200㎡ 半岛庄园级现代别墅，度假感与仪式感兼得。",
+    "designHighlights": [
+      "超大横厅设计",
+      "室内外泳池联动",
+      "酒店式主卧套房",
+      "多庭院布局"
+    ],
+    "coverImage": "/cases/senshan-bandao/p31-0.jpg",
+    "galleryImages": [
+      "/cases/senshan-bandao/p31-0.jpg",
+      "/cases/senshan-bandao/p32-0.jpg",
+      "/cases/senshan-bandao/p33-0.jpg",
+      "/cases/senshan-bandao/p34-0.jpg",
+      "/cases/senshan-bandao/p34-1.jpg",
+      "/cases/senshan-bandao/p35-0.jpg"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "slug": "xinhu-xianggelila",
+    "title": "新湖·香格里拉",
+    "location": "浙江杭州",
+    "areaSqm": 740,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代风格",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "740㎡ 现代别墅，都市精英的静谧居所。",
+    "designHighlights": [
+      "挑空会客厅",
+      "悬浮楼梯",
+      "整墙收纳系统",
+      "景观阳台贯通"
+    ],
+    "coverImage": "/cases/xinhu-xianggelila/p53-0.jpg",
+    "galleryImages": [
+      "/cases/xinhu-xianggelila/p53-0.jpg",
+      "/cases/xinhu-xianggelila/p54-0.jpg",
+      "/cases/xinhu-xianggelila/p54-1.jpg",
+      "/cases/xinhu-xianggelila/p55-0.jpg",
+      "/cases/xinhu-xianggelila/p56-0.jpg"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "slug": "keer-shiji-waitan",
+    "title": "科尔世纪外滩",
+    "location": "浙江杭州",
+    "areaSqm": 200,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代小法",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "200㎡ 现代小法公寓，小户型的精致主义范本。",
+    "designHighlights": [
+      "小户型空间极致利用",
+      "法式线条轻量化",
+      "明亮奶油色系",
+      "多功能房设计"
+    ],
+    "coverImage": "/cases/keer-shiji-waitan/p73-0.jpg",
+    "galleryImages": [
+      "/cases/keer-shiji-waitan/p73-0.jpg",
+      "/cases/keer-shiji-waitan/p74-0.jpg",
+      "/cases/keer-shiji-waitan/p75-0.jpg",
+      "/cases/keer-shiji-waitan/p76-0.jpg"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "slug": "yuxiangyuan",
+    "title": "御香园",
+    "location": "浙江绍兴",
+    "areaSqm": 780,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代奶油风",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "780㎡ 现代奶油风别墅，温柔色系包裹的治愈系大宅。",
+    "designHighlights": [
+      "奶油色微水泥",
+      "弧形设计语言",
+      "亲子活动空间",
+      "全屋圆角处理"
+    ],
+    "coverImage": "/cases/yuxiangyuan/p82-0.jpg",
+    "galleryImages": [
+      "/cases/yuxiangyuan/p82-0.jpg",
+      "/cases/yuxiangyuan/p83-0.jpg",
+      "/cases/yuxiangyuan/p84-0.jpg",
+      "/cases/yuxiangyuan/p85-0.jpg",
+      "/cases/yuxiangyuan/p85-1.jpg",
+      "/cases/yuxiangyuan/p86-0.jpg"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "slug": "huangting-shuian",
+    "title": "皇庭水岸",
+    "location": "福建莆田",
+    "areaSqm": 520,
+    "styleTag": "modern_tropical",
+    "styleLabel": "意式极简",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "520㎡ 意式极简别墅，以减法和质感定义奢华。",
+    "designHighlights": [
+      "意式极简家具",
+      "黑白灰主调",
+      "隐形门系统",
+      "艺术涂料墙面"
+    ],
+    "coverImage": "/cases/huangting-shuian/p87-0.jpg",
+    "galleryImages": [
+      "/cases/huangting-shuian/p87-0.jpg",
+      "/cases/huangting-shuian/p88-0.jpg",
+      "/cases/huangting-shuian/p89-0.jpg",
+      "/cases/huangting-shuian/p90-0.jpg"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "slug": "jiayuan-longfu",
+    "title": "佳源珑府",
+    "location": "浙江桐乡",
+    "areaSqm": 430,
+    "styleTag": "modern_tropical",
+    "styleLabel": "意式极简",
+    "source": "⑤号设计",
+    "note": "",
+    "description": "430㎡ 意式极简私宅，克制而高级的空间叙事。",
+    "designHighlights": [
+      "极简无主灯设计",
+      "岩板大面积应用",
+      "嵌入式家电",
+      "灰调木作"
+    ],
+    "coverImage": "/cases/jiayuan-longfu/p91-0.jpg",
+    "galleryImages": [
+      "/cases/jiayuan-longfu/p91-0.jpg",
+      "/cases/jiayuan-longfu/p92-0.jpg",
+      "/cases/jiayuan-longfu/p92-1.jpg",
+      "/cases/jiayuan-longfu/p93-0.jpg",
+      "/cases/jiayuan-longfu/p93-1.jpg"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "slug": "vanke-songshan-pushe",
+    "title": "万科松山湖璞舍别墅",
+    "location": "广东东莞",
+    "areaSqm": 1100,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代东方",
+    "source": "派尚设计",
+    "note": "硬装5500元/㎡；软装4500元/㎡",
+    "description": "1100㎡ 松山湖璞舍别墅，硬装设计与软装深化一体呈现的现代东方大宅。",
+    "designHighlights": [
+      "现代东方设计语言",
+      "硬装软装一体化",
+      "湖景资源最大化",
+      "万科标杆项目"
+    ],
+    "coverImage": "/cases/vanke-songshan-pushe/p01-0.jpg",
+    "galleryImages": [
+      "/cases/vanke-songshan-pushe/p01-0.jpg",
+      "/cases/vanke-songshan-pushe/p02-0.jpg",
+      "/cases/vanke-songshan-pushe/p03-0.jpg"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "slug": "nanjing-guantianxia",
+    "title": "南京观天下叠拼",
+    "location": "江苏南京",
+    "areaSqm": 350,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代",
+    "source": "派尚设计",
+    "note": "",
+    "description": "350㎡ 叠拼别墅样板间，垂直空间的高效利用与品质呈现。",
+    "designHighlights": [
+      "叠拼户型优化",
+      "挑空设计",
+      "样板间级陈设",
+      "动静分区明确"
+    ],
+    "coverImage": "/cases/nanjing-guantianxia/p04-0.jpg",
+    "galleryImages": [
+      "/cases/nanjing-guantianxia/p04-0.jpg",
+      "/cases/nanjing-guantianxia/p05-0.jpg",
+      "/cases/nanjing-guantianxia/p05-1.jpg",
+      "/cases/nanjing-guantianxia/p06-0.jpg",
+      "/cases/nanjing-guantianxia/p07-0.jpg",
+      "/cases/nanjing-guantianxia/p07-1.jpg"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "slug": "songshan-living-pushe",
+    "title": "松山湖万科生活中心璞舍",
+    "location": "广东东莞",
+    "areaSqm": 2000,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代东方",
+    "source": "派尚设计",
+    "note": "",
+    "description": "2000㎡ 生活中心大宅，会所级公区与私宅尺度的融合。",
+    "designHighlights": [
+      "2000㎡ 超大尺度",
+      "会所式公区",
+      "多功能宴会空间",
+      "标杆展示项目"
+    ],
+    "coverImage": "/cases/songshan-living-pushe/p08-0.jpg",
+    "galleryImages": [
+      "/cases/songshan-living-pushe/p08-0.jpg",
+      "/cases/songshan-living-pushe/p09-0.jpg",
+      "/cases/songshan-living-pushe/p10-0.jpg",
+      "/cases/songshan-living-pushe/p11-0.jpg"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "slug": "zhenghong-yuetang",
+    "title": "正弘悦云棠合院别墅",
+    "location": "河南郑州",
+    "areaSqm": 207,
+    "styleTag": "modern_tropical",
+    "styleLabel": "新中式合院",
+    "source": "派尚设计",
+    "note": "硬装4500元/㎡；软装4000元/㎡",
+    "description": "207㎡ 合院别墅，院落生活与现代居住的平衡之作。",
+    "designHighlights": [
+      "合院格局",
+      "庭院景观联动",
+      "小面积高效布局",
+      "软硬装一体执行"
+    ],
+    "coverImage": "/cases/zhenghong-yuetang/p12-0.jpg",
+    "galleryImages": [
+      "/cases/zhenghong-yuetang/p12-0.jpg",
+      "/cases/zhenghong-yuetang/p13-0.jpg",
+      "/cases/zhenghong-yuetang/p14-0.jpg"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "slug": "huarun-luqi",
+    "title": "华润鹭栖湖叠拼别墅",
+    "location": "浙江嘉兴",
+    "areaSqm": 230,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代轻奢",
+    "source": "派尚设计",
+    "note": "华润内部评选最美样板房",
+    "description": "230㎡ 湖景叠拼，华润内部评选最美样板房。",
+    "designHighlights": [
+      "最美样板房获奖",
+      "灰色系高级质感",
+      "金属细节点缀",
+      "湖景视野"
+    ],
+    "coverImage": "/cases/huarun-luqi/p15-0.jpg",
+    "galleryImages": [
+      "/cases/huarun-luqi/p15-0.jpg",
+      "/cases/huarun-luqi/p16-0.jpg",
+      "/cases/huarun-luqi/p16-1.jpg",
+      "/cases/huarun-luqi/p16-2.jpg",
+      "/cases/huarun-luqi/p16-3.jpg"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "slug": "dapingceng-huizuo",
+    "title": "大平层豪宅会所公寓",
+    "location": "广东",
+    "areaSqm": 320,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代奢华",
+    "source": "派尚设计",
+    "note": "",
+    "description": "320㎡/210㎡ 大平层豪宅会所公寓，城市天际线上的奢华会客空间。",
+    "designHighlights": [
+      "天际线景观",
+      "会所级会客区",
+      "圆形动线设计",
+      "酒店式奢装"
+    ],
+    "coverImage": "/cases/dapingceng-huizuo/p17-0.jpg",
+    "galleryImages": [
+      "/cases/dapingceng-huizuo/p17-0.jpg",
+      "/cases/dapingceng-huizuo/p17-1.jpg",
+      "/cases/dapingceng-huizuo/p18-0.jpg",
+      "/cases/dapingceng-huizuo/p18-1.jpg",
+      "/cases/dapingceng-huizuo/p19-0.jpg",
+      "/cases/dapingceng-huizuo/p20-0.jpg",
+      "/cases/dapingceng-huizuo/p20-1.jpg",
+      "/cases/dapingceng-huizuo/p21-0.jpg",
+      "/cases/dapingceng-huizuo/p21-1.jpg",
+      "/cases/dapingceng-huizuo/p22-0.jpg",
+      "/cases/dapingceng-huizuo/p22-1.jpg",
+      "/cases/dapingceng-huizuo/p23-0.jpg",
+      "/cases/dapingceng-huizuo/p23-1.jpg"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "slug": "zhonghuan-dieshu",
+    "title": "中寰叠墅样板间",
+    "location": "湖南长沙",
+    "areaSqm": 280,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代",
+    "source": "派尚设计",
+    "note": "2024 第十三届艾特奖",
+    "description": "280㎡ 叠墅样板间，2024 年第十三届艾特奖获奖作品。",
+    "designHighlights": [
+      "艾特奖获奖作品",
+      "华为全屋智能",
+      "叠墅空间革新",
+      "样板房标杆"
+    ],
+    "coverImage": "/cases/zhonghuan-dieshu/p24-0.jpg",
+    "galleryImages": [
+      "/cases/zhonghuan-dieshu/p24-0.jpg",
+      "/cases/zhonghuan-dieshu/p25-0.jpg",
+      "/cases/zhonghuan-dieshu/p26-0.jpg",
+      "/cases/zhonghuan-dieshu/p27-0.jpg",
+      "/cases/zhonghuan-dieshu/p28-0.jpg",
+      "/cases/zhonghuan-dieshu/p29-0.jpg"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "slug": "guangzhou-yuxigu",
+    "title": "广州中建御溪谷别墅",
+    "location": "广东广州",
+    "areaSqm": 420,
+    "styleTag": "modern_tropical",
+    "styleLabel": "现代",
+    "source": "派尚设计",
+    "note": "",
+    "description": "420㎡ 溪谷别墅，自然地貌与现代建筑的对话。",
+    "designHighlights": [
+      "溪谷景观资源",
+      "山地别墅布局",
+      "大面积观景面",
+      "自然材质运用"
+    ],
+    "coverImage": "/cases/guangzhou-yuxigu/p30-0.jpg",
+    "galleryImages": [
+      "/cases/guangzhou-yuxigu/p30-0.jpg",
+      "/cases/guangzhou-yuxigu/p31-0.jpg",
+      "/cases/guangzhou-yuxigu/p31-1.jpg",
+      "/cases/guangzhou-yuxigu/p32-0.jpg",
+      "/cases/guangzhou-yuxigu/p32-1.jpg",
+      "/cases/guangzhou-yuxigu/p33-0.jpg",
+      "/cases/guangzhou-yuxigu/p33-1.jpg",
+      "/cases/guangzhou-yuxigu/p33-2.jpg",
+      "/cases/guangzhou-yuxigu/p34-0.jpg",
+      "/cases/guangzhou-yuxigu/p35-0.jpg",
+      "/cases/guangzhou-yuxigu/p36-0.jpg",
+      "/cases/guangzhou-yuxigu/p36-1.jpg",
+      "/cases/guangzhou-yuxigu/p37-0.jpg",
+      "/cases/guangzhou-yuxigu/p38-0.jpg",
+      "/cases/guangzhou-yuxigu/p39-0.jpg",
+      "/cases/guangzhou-yuxigu/p39-1.jpg"
+    ],
+    "sortOrder": 21
+  }
+]

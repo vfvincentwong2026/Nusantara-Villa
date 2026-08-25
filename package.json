@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:e2e": "node e2e-smoke.mjs"
+    "test:e2e": "node e2e-smoke.mjs",
+    "test:e2e:cases": "node e2e-cases.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.3",
