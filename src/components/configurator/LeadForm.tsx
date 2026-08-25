@@ -5,7 +5,7 @@ import { useConfiguratorStore, useUserInfo } from '@/store/useConfiguratorStore'
 
 export function LeadForm() {
   const { userInfo, errors, setUserInfo, clearErrors } = useUserInfo()
-  const { quote, currency, style, size, tier, addons, setSubmitting, isSubmitting, complete } =
+  const { quote, currency, style, size, tier, addons, setSubmitting, isSubmitting, complete, setWhatsappLink } =
     useConfiguratorStore()
 
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -107,11 +107,9 @@ export function LeadForm() {
       const data = await response.json()
 
       if (data.success) {
+        // 不强制跳转：先展示完成页，由用户主动点击 WhatsApp 按钮
+        setWhatsappLink(data.whatsappLink || null)
         complete()
-        if (data.whatsappLink) {
-          // 使用 location.href 确保不被浏览器拦截
-          window.location.href = data.whatsappLink
-        }
       } else {
         setSubmitError(data.message || '提交失败，请稍后重试')
       }

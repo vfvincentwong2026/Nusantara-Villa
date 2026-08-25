@@ -403,6 +403,7 @@ interface ConfiguratorState {
   currency: Currency
   disclaimer: string
   errors: Record<string, string>
+  whatsappLink: string | null
 
   setStyle: (style: VillaStyle) => void
   setSize: (size: AreaSize) => void
@@ -423,6 +424,7 @@ interface ConfiguratorState {
   complete: () => void
   setError: (field: string, message: string) => void
   clearErrors: () => void
+  setWhatsappLink: (url: string | null) => void
 }
 
 export const useConfiguratorStore = create<ConfiguratorState>()(
@@ -441,6 +443,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
       currency: 'USD',
       disclaimer: DISCLAIMER,
       errors: {},
+      whatsappLink: null,
 
       setStyle: (style) => {
         set({ style })
@@ -532,6 +535,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
           currentStep: 'welcome',
           isSubmitting: false,
           isComplete: false,
+          whatsappLink: null,
           errors: {},
         })
       },
@@ -549,6 +553,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       setSubmitting: (isSubmitting) => set({ isSubmitting }),
       complete: () => set({ isComplete: true, currentStep: 'complete' }),
+      setWhatsappLink: (whatsappLink) => set({ whatsappLink }),
       setError: (field, message) => {
         const { errors } = get()
         set({ errors: { ...errors, [field]: message } })

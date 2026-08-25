@@ -45,6 +45,17 @@
 | `/api/lead` | API | 线索提交接口 (Edge Runtime) |
 
 
+## 📸 页面预览
+
+| 欢迎页 + 3D 场景 | 增值模块选择 |
+| :---: | :---: |
+| ![欢迎页](docs/screenshots/01-welcome.png) | ![增值模块](docs/screenshots/03-addons.png) |
+| **实时 BOQ 报价** | **提交完成 + WhatsApp 联系** |
+| ![报价页](docs/screenshots/04-quote-usd.png) | ![完成页](docs/screenshots/07-complete.png) |
+
+> 截图由 Playwright 端到端测试自动产出（`npm run test:e2e`）。
+
+
 ## 🛠️ 技术选型
 
 | 层级 | 技术 |

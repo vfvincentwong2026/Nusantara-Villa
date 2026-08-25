@@ -94,6 +94,7 @@ function CompletionStep() {
   const style = useConfiguratorStore((s) => s.style)
   const size = useConfiguratorStore((s) => s.size)
   const tier = useConfiguratorStore((s) => s.tier)
+  const whatsappLink = useConfiguratorStore((s) => s.whatsappLink)
   const { quote, displayPrice } = useQuote()
 
   const styleName = style ? STYLE_NAMES[style] : '现代热带'
@@ -122,6 +123,16 @@ function CompletionStep() {
             <span>{tierName}</span>
           </div>
         </div>
+      )}
+      {whatsappLink && (
+        <a
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 mb-3 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 transition-colors shadow-md"
+        >
+          💬 Chat with Us on WhatsApp
+        </a>
       )}
       <button
         onClick={reset}

@@ -114,7 +114,7 @@ await step('表单空提交被校验拦截', async () => {
   await page.waitForSelector('text=请输入您的姓名')
 })
 
-await step('填写表单并提交', async () => {
+await step('填写表单并提交 → 完成页可见', async () => {
   await page.fill('#name', 'E2E Tester')
   await page.fill('#email', 'e2e@test.com')
   await page.fill('#phone', '+62 812-0000-1111')
@@ -122,13 +122,15 @@ await step('填写表单并提交', async () => {
   await page.screenshot({ path: `${SHOT_DIR}/06-form.png` })
   await page.click('button:has-text("Get Full BOQ")')
   await page.waitForSelector('text=Configuration Saved', { timeout: 20000 })
+  await page.waitForTimeout(600)
   await page.screenshot({ path: `${SHOT_DIR}/07-complete.png` })
 })
 
-await step('提交后触发 wa.me 跳转', async () => {
-  await page.waitForTimeout(1500)
-  if (!interceptedWaUrl) throw new Error('未捕获到 wa.me 跳转')
-  console.log(`   跳转链接: ${interceptedWaUrl.slice(0, 120)}...`)
+await step('完成页提供 WhatsApp 按钮（不再强制跳转）', async () => {
+  const href = await page.getAttribute('a:has-text("WhatsApp")', 'href')
+  if (!href || !href.includes('wa.me')) throw new Error(`WhatsApp 按钮链接异常: ${href}`)
+  console.log(`   按钮链接: ${href.slice(0, 100)}...`)
+  if (interceptedWaUrl) throw new Error('仍发生了强制跳转')
 })
 
 // ---------- 汇总 ----------
